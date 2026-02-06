@@ -1,0 +1,218 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NASA AI | Голос Вселенной</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Unbounded:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-api-base="https://nasa-ai-brlp.onrender.com">
+  <div class="bg">
+    <div class="nebula"></div>
+    <div class="stars"></div>
+    <div class="grid-glow"></div>
+  </div>
+
+  <header class="hero">
+    <div class="brand">
+      <div class="badge badge-nasa">
+        <i class="fa-solid fa-satellite"></i>
+        <span>NASA</span>
+      </div>
+      <div class="brand-divider"></div>
+      <div class="badge badge-ai">
+        <i class="fa-solid fa-brain"></i>
+        <span>AI</span>
+      </div>
+    </div>
+    <h1>Голос Вселенной</h1>
+    <p>
+      Слушаем сонфицированные сигналы NASA, превращаем их в текст и понятные истории
+      с помощью искусственного интеллекта.
+    </p>
+    <div class="hero-actions">
+      <button class="primary-btn" id="jumpToSounds">Выбрать звук</button>
+      <div class="key-pill" id="keyStatus">Проверяю ключи API…</div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="card sounds" id="sounds">
+      <div class="card-header">
+        <div>
+          <h2><i class="fa-solid fa-meteor"></i> Архив космических звуков</h2>
+          <p>Выберите сигнал и запустите анализ ИИ.</p>
+        </div>
+      </div>
+      <div class="search-panel">
+        <div class="search-bar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="searchInput" type="text" placeholder="Поиск по миссиям: Voyager, Cassini, Artemis..." autocomplete="off">
+          <button class="search-btn" id="searchBtn" type="button">Найти</button>
+        </div>
+        <div class="search-meta">
+          <span class="search-status" id="searchStatus">Показаны избранные записи NASA</span>
+          <button class="search-reset" id="searchReset" type="button">Сброс</button>
+        </div>
+        <div class="search-chips">
+          <button class="chip-btn" type="button" data-query="Voyager">Voyager</button>
+          <button class="chip-btn" type="button" data-query="Cassini">Cassini</button>
+          <button class="chip-btn" type="button" data-query="Artemis">Artemis</button>
+          <button class="chip-btn" type="button" data-query="Mars">Mars</button>
+        </div>
+      </div>
+      <div class="sounds-grid" id="soundsGrid"></div>
+      <div class="loading-sounds" id="loadingSounds">
+        <div class="pulse"></div>
+        <span>Загружаю коллекцию NASA…</span>
+      </div>
+    </section>
+
+    <section class="card player">
+      <div class="card-header">
+        <div>
+          <h2><i class="fa-solid fa-wave-square"></i> Приемник</h2>
+          <p>Слушайте сигнал и наблюдайте спектр.</p>
+        </div>
+      </div>
+      <div class="visualizer">
+        <canvas id="waveCanvas"></canvas>
+        <div class="bars" id="bars"></div>
+      </div>
+      <div class="track">
+        <h3 id="trackTitle">Выберите звук слева</h3>
+        <p id="trackDesc">Мы загрузим аудио NASA и подготовим анализ.</p>
+        <div class="track-meta">
+          <span class="chip" id="trackType">Тип: —</span>
+          <a class="chip link" id="trackSource" href="#" target="_blank" rel="noopener">Источник</a>
+          <a class="chip link" id="trackAudio" href="#" target="_blank" rel="noopener">Аудио</a>
+        </div>
+      </div>
+      <div class="player-controls">
+        <button class="icon-btn" id="playBtn" disabled><i class="fa-solid fa-play"></i></button>
+        <button class="icon-btn" id="pauseBtn" disabled><i class="fa-solid fa-pause"></i></button>
+        <button class="icon-btn" id="stopBtn" disabled><i class="fa-solid fa-stop"></i></button>
+        <div class="volume-control">
+          <i class="fa-solid fa-volume-high"></i>
+          <input type="range" id="volumeSlider" min="0" max="100" value="70">
+        </div>
+      </div>
+      <div class="progress">
+        <input type="range" id="progressBar" min="0" max="100" value="0">
+        <div class="time-display">
+          <span id="currentTime">00:00</span>
+          <span id="totalTime">00:00</span>
+        </div>
+      </div>
+      <button class="analyze-btn" id="analyzeBtn" disabled>
+        <i class="fa-solid fa-robot"></i>
+        Расшифровать сигнал
+        <span class="scan-line"></span>
+      </button>
+      <p class="hint">Совет: включите воспроизведение, чтобы ИИ увидел спектр.</p>
+    </section>
+
+    <section class="card ai">
+      <div class="card-header">
+        <div>
+          <h2><i class="fa-solid fa-brain"></i> Отчет ИИ</h2>
+          <p>Текст сигнала и научное объяснение.</p>
+        </div>
+      </div>
+      <div class="ai-status" id="aiStatus">
+        <span class="dot"></span>
+        <span id="aiStatusText">Ожидаю выбор звука</span>
+      </div>
+      <div class="ai-panels">
+        <div class="ai-block">
+          <h4>Текст сигнала</h4>
+          <div class="ai-content" id="aiTranscript">
+            Здесь появится «расшифровка» сигнала в виде текста.
+          </div>
+        </div>
+        <div class="ai-block">
+          <h4>Научное объяснение</h4>
+          <div class="ai-content" id="aiExplanation">
+            Нажмите «Расшифровать сигнал», чтобы получить разбор от ИИ.
+          </div>
+        </div>
+      </div>
+      <div class="ai-insights" id="aiInsights"></div>
+      <div class="ai-features">
+        <span class="feature" id="featureEnergy">Энергия: —</span>
+        <span class="feature" id="featureBand">Спектр: —</span>
+        <span class="feature" id="featurePeak">Пик: —</span>
+      </div>
+    </section>
+  </main>
+
+  <section class="card history" id="history">
+    <div class="card-header">
+      <div>
+        <h2><i class="fa-solid fa-timeline"></i> История сигнала</h2>
+        <p>Ключевые даты и факты выбранной записи.</p>
+      </div>
+    </div>
+    <div class="history-body">
+      <div class="timeline" id="historyTimeline">
+        <div class="timeline-item">
+          <div class="timeline-date">—</div>
+          <div class="timeline-content">
+            <h4>Выберите звук</h4>
+            <p>История появится после выбора записи.</p>
+          </div>
+        </div>
+      </div>
+      <div class="facts">
+        <h3>Факты сигнала</h3>
+        <div class="facts-grid" id="historyFacts">
+          <span class="fact-chip">Данные появятся после выбора</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card gallery" id="gallery">
+    <div class="card-header">
+      <div>
+        <h2><i class="fa-solid fa-image"></i> NASA сегодня</h2>
+        <p>Подборка снимков из NASA APOD для атмосферы.</p>
+      </div>
+    </div>
+    <div class="gallery-grid" id="nasaGallery">
+      <div class="gallery-placeholder">Готовлю кадры космоса…</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <h4>Как это работает</h4>
+        <p>
+          Мы берем сонфицированные записи NASA, отображаем спектр, а ИИ превращает
+          сигнал в понятный текст и объяснение.
+        </p>
+      </div>
+      <div>
+        <h4>Важно</h4>
+        <p>
+          Расшифровка является интерпретацией на основе метаданных и спектра,
+          а не буквальной «речью» космоса.
+        </p>
+      </div>
+      <div>
+        <h4>Проект</h4>
+        <p>NASA AI Lab · 2026</p>
+      </div>
+    </div>
+    <div class="copyright">© 2026 NASA AI · Сделано с любопытством</div>
+  </footer>
+
+  <audio id="audioPlayer"></audio>
+  <script src="script.js" defer></script>
+</body>
+</html>
