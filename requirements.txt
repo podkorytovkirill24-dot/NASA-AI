@@ -1,7 +1,0 @@
-﻿flask
-flask-cors
-python-dotenv
-requests
-google-generativeai
-openai
-gunicorn
